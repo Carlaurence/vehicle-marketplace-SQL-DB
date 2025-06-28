@@ -1,24 +1,34 @@
--- Contenido de: toyota.sql
+-- Remove the tables if exist
+DROP TABLE IF EXISTS sales;
+DROP TABLE IF EXISTS vehicles;
+DROP TABLE IF EXISTS vendors;
+DROP TABLE IF EXISTS fuel_types;
+DROP TABLE IF EXISTS body_styles;
+DROP TABLE IF EXISTS manufacturers;
 
--- Tabla de fabricantes
+-- Table manufacturers
+-- This table stores information about vehicle manufacturers
 CREATE TABLE manufacturers (
   id SERIAL PRIMARY KEY,
   name VARCHAR(50) NOT NULL
 );
 
--- Tabla de estilos de carrocería
+-- Table body_styles
+-- This table stores different body styles of vehicles
 CREATE TABLE body_styles (
   id SERIAL PRIMARY KEY,
   style VARCHAR(50) NOT NULL
 );
 
--- Tabla de tipos de combustible
+-- table fuel_types
+-- This table stores different types of fuel used in vehicles
 CREATE TABLE fuel_types (
   id SERIAL PRIMARY KEY,
   type VARCHAR(50) NOT NULL
 );
 
--- Tabla principal de vehículos
+-- table vehicles
+-- This table stores information about vehicles
 CREATE TABLE vehicles (
   id SERIAL PRIMARY KEY,
   model VARCHAR(50) NOT NULL,
@@ -32,6 +42,38 @@ CREATE TABLE vehicles (
   body_style_id INT REFERENCES body_styles(id),
   fuel_type_id INT REFERENCES fuel_types(id)
 );
+
+-- table vendors 
+-- This table stores information about vendors
+CREATE TABLE vendors (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  contact_info VARCHAR(150)
+);
+
+-- 3. Sales table
+-- This table stores information about vehicle sales
+CREATE TABLE sales (
+  id SERIAL PRIMARY KEY,
+  vehicle_id INT REFERENCES vehicles(id),
+  vendor_id INT REFERENCES vendors(id),
+  sale_date DATE NOT NULL,
+  sale_price DECIMAL(10,2) NOT NULL
+);
+
+-- Add a column to indicate if the vehicle is available
+ALTER TABLE vehicles ADD COLUMN is_available BOOLEAN DEFAULT TRUE;
+
+-- create vendors
+-- Seed data for vendors table
+INSERT INTO vendors (name, email, address, phone) VALUES
+('Maria Gomez', 'maria.gomez@email.com', '123 Main St, Cityville', '+1-555-1234'),
+('John Smith', 'john.smith@email.com', '456 Elm Ave, Townsburg', '+1-555-5678'),
+('Ana Rodriguez', 'ana.rodriguez@email.com', '789 Oak Blvd, Metropolis', '+1-555-9012'),
+('Carlos Perez', 'carlos.perez@email.com', '321 Pine Rd, Villagetown', '+1-555-3456'),
+('Emily Johnson', 'emily.johnson@email.com', '654 Maple Ln, Capital City', '+1-555-7890');
+
 
 -- crear manufacturers
 INSERT INTO manufacturers (id, name) VALUES (1, 'Toyota');
